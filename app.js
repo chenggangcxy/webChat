@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
+//数据库连接测试
+// require("./config/test_connect.js");
+
 var app = express();
 
 // view engine setup
