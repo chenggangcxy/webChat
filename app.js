@@ -4,9 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require("express-session");
+var url = require("url");
 
+//路由配置
 var index = require('./routes/server/index');
 var users = require('./routes/server/users');
+var login = require('./routes/server/login');
 
 //数据库连接测试
 // require("./config/test_connect.js");
@@ -25,8 +29,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(session({
+  name: "cai",
+  secret: "cai-s",
+  //store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+  saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
+  resave: false,  // 是否每次都重新保存会话，建议false
+  cookie: {
+      maxAge: 60 * 10 * 1000  // 有效期，单位是毫秒
+  }
+}));
+
+//拦截请求  判断是否登录
+//如果当前请求的是登录页面，那么不重定向
+app.use(function(req, res, next){
+    var path = req.path;
+    var regRs = /^\/login/.test(path);
+    if(req.session.user){
+      next();
+    }else{
+      if(!regRs){
+        console.log("重定向")
+        res.redirect("/login");
+      }else{
+        next();
+      }  
+    }
+});
+
 app.use('/', index);
+app.use("/login",login);
 app.use('/users', users);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
