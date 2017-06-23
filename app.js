@@ -11,6 +11,8 @@ var url = require("url");
 var index = require('./routes/server/index');
 var users = require('./routes/server/users');
 var login = require('./routes/server/login');
+var loginout = require('./routes/server/loginout');
+var regist = require('./routes/server/regist');
 
 //数据库连接测试
 // require("./config/test_connect.js");
@@ -45,7 +47,7 @@ app.use(session({
 //如果当前请求的是登录页面，那么不重定向
 app.use(function(req, res, next){
     var path = req.path;
-    var regRs = /^\/login/.test(path);
+    var regRs = /(^\/login)|(^\/regist)/.test(path);
     if(req.session.user){
       next();
     }else{
@@ -60,7 +62,9 @@ app.use(function(req, res, next){
 
 app.use('/', index);
 app.use("/login",login);
+app.use("/loginout",loginout);
 app.use('/users', users);
+app.use('/regist', regist);
 
 
 // catch 404 and forward to error handler
