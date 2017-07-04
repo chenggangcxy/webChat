@@ -5,10 +5,31 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/login" method="post">
+    <form id="login-form" action="/login" method="post">
         <input type="text" name="user">
         <input type="password" name="password">
-        <input type="submit" value="submit">
+        <input id="login" type="button" value="login">
     </form>
 </body>
+
+<script src="/javascripts/jquery.js"></script>
+<script src="/javascripts/socket.io.js"></script>
+
+<script>
+    $(function(){
+        $("#login").on("click",function(){
+            $.post("/login",$("#login-form").serialize(),function(result){
+                if(result.status == 1){
+                    var socket = io("http://localhost:8080");
+                    socket.on("connect",function(){
+                         socket.emit("system",{id: socket.id,action: "login",msg:"登录成功",user: $("input[name=user]").val()},function(data){
+                            window.location.href = "http://localhost:3000/";
+                        })     
+                    })
+                   
+                }
+            })
+        })
+    })
+</script>
 </html>

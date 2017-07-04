@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test api</title>
+</head>
+<body>
+    
+</body>
+<script src="/javascripts/jquery.js"></script>
+<script src="/javascripts/socket.io.js"></script>
+
+<script>
+    var socket = io("http://localhost:8080")
+    socket.on("system", function(data){
+        console.log(data)
+    })
+</script>
+</html>

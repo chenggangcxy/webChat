@@ -13,11 +13,52 @@ var users = require('./routes/server/users');
 var login = require('./routes/server/login');
 var loginout = require('./routes/server/loginout');
 var regist = require('./routes/server/regist');
+var test = require('./routes/server/test');
 
 //数据库连接测试
 // require("./config/test_connect.js");
 
+var sMap = {};
+
 var app = express();
+
+var server = require('http').Server(app);
+
+var io = require("socket.io")(server);
+
+server.listen("8080");
+
+io.on("connection", function(socket){
+       socket.on("system",function(data,fn){
+         fn && fn();
+        //  console.log(socket)
+         var action = data.action;
+         console.log("action:",action);
+         if(action == "login"){
+             sMap[data.user] = data.id;
+            // sMap[data.user] = socket;
+             socket.broadcast.emit("system", data);
+            console.log("login:",data)
+         }else if(action == "be-friend"){
+           var clients = io.sockets.sockets;
+          //  console.log(clients);
+           var targetUser = data.to;
+           var targetId = sMap[targetUser];
+          //  console.log(targetId)
+           console.log("bf:",data);
+          //  for(var k in targetId){
+          //    console.log(k)
+          //  }
+          //  console.log("sMap",sMap)
+          socket.emit('test', {
+             from: data.from,
+             to: data.to
+           });
+          socket.to(targetId).emit("test",{a:111}) 
+         }  
+       })
+  }) 
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -65,7 +106,7 @@ app.use("/login",login);
 app.use("/loginout",loginout);
 app.use('/users', users);
 app.use('/regist', regist);
-
+app.use('/test', test);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

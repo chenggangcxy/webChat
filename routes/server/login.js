@@ -5,7 +5,7 @@ var dbConfig = require("../../config/db.js");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  if(req.session.user){
+  if(req.session.user){ 
     res.redirect("/");
   }else{
      res.render('login');
@@ -25,11 +25,11 @@ router.post("/",function(req, res, next){
 
       if(result && result.length){
          req.session.user = user;
-         res.redirect("/");
-        //  res.json({
-        //   status: 1,
-        //   msg: "登录成功!"
-        // })
+        //  res.redirect("/");
+         res.json({
+          status: 1,
+          msg: "登录成功!"
+        })
       }else{
         res.json({
           status: 0,

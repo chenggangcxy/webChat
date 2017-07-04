@@ -1,13 +1,51 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>首页</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <a href="javascript:"><%= user %></a>
+    <a id="current-user" href="javascript:"><%= user %></a>
     <a href="/loginout">退出</a>
+    <a href="/test">test api</a>
     <p>Welcome to <%= title %></p>
+    <br>
+    <input type="text" id="to-user">
+    <button id="bf">sure</button>
   </body>
+
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/socket.io.js"></script>
+
+  <script>
+    $(function(){
+      var socket = io("http://localhost:8080");
+
+      //系统消息
+      socket.on("connect",function(){
+          socket.on("system", function(data){
+            console.log(data)
+          })
+
+        
+
+        $("#bf").on("click",function(){
+          var to = $("#to-user").val();
+          var user = "bbb";
+          socket.emit("system",{
+            action: "be-friend",
+            from: $("#current-user").text(),
+            to: to
+          })
+        })
+
+      })
+
+      socket.on("test", function(data){
+          console.log("test:",data)
+      })
+
+  
+    })
+  </script>
 </html>
