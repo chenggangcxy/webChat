@@ -25,7 +25,6 @@ router.post("/",function(req, res, next){
 
       if(result && result.length){
          req.session.user = user;
-        //  res.redirect("/");
          res.json({
           status: 1,
           msg: "登录成功!"

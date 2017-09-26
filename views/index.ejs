@@ -8,7 +8,6 @@
     <a id="current-user" href="javascript:"><%= user %></a>
     <a href="/loginout">退出</a>
     <a href="/test">test api</a>
-    <p>Welcome to <%= title %></p>
     <br>
     <input type="text" id="to-user">
     <button id="bf">sure</button>
@@ -19,33 +18,17 @@
 
   <script>
     $(function(){
-      var socket = io("http://localhost:8080");
+      var socket = io.connect("http://localhost:8888?user=<%= user %>");
 
-      //系统消息
-      socket.on("connect",function(){
-          socket.on("system", function(data){
-            console.log(data)
-          })
-
-        
-
-        $("#bf").on("click",function(){
-          var to = $("#to-user").val();
-          var user = "bbb";
-          socket.emit("system",{
-            action: "be-friend",
-            from: $("#current-user").text(),
-            to: to
-          })
-        })
-
+      socket.on("system",function(data){
+        console.log(data)
+        if(data.type == "go-online"){
+          console.warn(data.user+"上线了...")
+        }
+        if(data.type == "off-online"){
+          console.warn(data.user+"下线了...")
+        }
       })
-
-      socket.on("test", function(data){
-          console.log("test:",data)
-      })
-
-  
     })
   </script>
 </html>

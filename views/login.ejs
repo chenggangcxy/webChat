@@ -20,13 +20,7 @@
         $("#login").on("click",function(){
             $.post("/login",$("#login-form").serialize(),function(result){
                 if(result.status == 1){
-                    var socket = io("http://localhost:8080");
-                    socket.on("connect",function(){
-                         socket.emit("system",{id: socket.id,action: "login",msg:"登录成功",user: $("input[name=user]").val()},function(data){
-                            window.location.href = "http://localhost:3000/";
-                        })     
-                    })
-                   
+                    window.location.href = "http://localhost:8888/";     
                 }
             })
         })
