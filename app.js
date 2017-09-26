@@ -19,51 +19,35 @@ var test = require('./routes/server/test');
 // require("./config/test_connect.js");
 
 //redis 连接
-var redisClient = require("./routes/server/redisClient");
+// var redisClient = require("./routes/server/redisClient");
 
 var app = express();
 var server = require('http').Server(app);
 var io = require("socket.io")(server);
 
+var userMap = {};
+
 io.on("connection",function(socket){
   var id = socket.id;
   var user = socket.handshake.query.user;
-  var userMap = null;
-
-  redisClient.get("userMap", function(err,data){
-    // console.log("-------------")
-    // console.log(data)
-    // console.log("-------------")
-    userMap = JSON.parse(data) || {};
-    
-    userMap[user] = id;
-    redisClient.set("userMap", JSON.stringify(userMap));
-    console.log("um",userMap)
-
-    io.of("/").emit("system",{
+   
+  userMap[user] = id;
+  
+  io.of("/").emit("system",{
       type: "go-online",
       id: id,
       user: user,
       allIds: userMap
-    })
-
   })
-  
+
   socket.on("disconnecting", function(reason){
     var disconnectId = socket.id;
-
-    redisClient.get("userMap", function(err,data){
-      userMap = JSON.parse(data) || {};
-      
-      delete userMap[user];
-      redisClient.set("userMap", JSON.stringify(userMap));
-      // console.log("um",userMap)
-      io.of("/").emit("system",{
-        type: "off-online",
-        id: id,
-        user: user,
-        allIds: userMap
-      })
+    delete userMap[user];
+    io.of("/").emit("system",{
+      type: "off-online",
+      id: id,
+      user: user,
+      allIds: userMap
     })
   })
 
