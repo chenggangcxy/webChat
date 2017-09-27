@@ -66,7 +66,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use(session({
   name: "cai",
@@ -75,7 +75,7 @@ app.use(session({
   saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
   resave: false,  // 是否每次都重新保存会话，建议false
   cookie: {
-      maxAge: 60 * 10 * 1000  // 有效期，单位是毫秒
+      maxAge: 60000 * 10 * 1000  // 有效期，单位是毫秒
   }
 }));
 

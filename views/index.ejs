@@ -2,34 +2,22 @@
 <html>
   <head>
     <title>首页</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
-    <a id="current-user" href="javascript:"><%= user %></a>
-    <a href="/loginout">退出</a>
-    <a href="/test">test api</a>
-    <br>
-    <input type="text" id="to-user">
-    <button id="bf">sure</button>
+
+    <div class="header">
+        <a class="fr" href="/loginout">退出</a>
+        <div class="fr" id="current-user"><i class="fa fa-user"></i>&nbsp;<%= user %> &nbsp;&nbsp;&nbsp;&nbsp;</div>
+    </div>
+
+
+    <div id="app"></div>
   </body>
-
-  <script src="/javascripts/jquery.js"></script>
-  <script src="/javascripts/socket.io.js"></script>
-  <script src="/javascripts/vue.js"></script>
-
   <script>
-    $(function(){
-      var socket = io.connect("http://localhost:8888?user=<%= user %>");
-
-      socket.on("system",function(data){
-        console.log(data)
-        if(data.type == "go-online"){
-          console.warn(data.user+"上线了...")
-        }
-        if(data.type == "off-online"){
-          console.warn(data.user+"下线了...")
-        }
-      })
-    })
+    var currentUser = "<%= user %>";
   </script>
+  <script src="/javascripts/socket.io.js"></script>
+  <script src="/common.lib.js"></script>
+  <script src="/index.bundle.js"></script>
 </html>
